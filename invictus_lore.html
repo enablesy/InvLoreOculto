@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVICTUS: Chronicle — El Lore</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05070a;--bg2:#070a0e;--surface:#0a0e14;--surface2:#0e1318;
+  --border:#141c28;--border2:#1a2438;
+  --text:#a0b0c0;--text-dim:#3a4a5a;--text-bright:#c8dae8;
+  --gold:#c8a44a;--gold2:#e0bc6a;--gold-dim:rgba(200,164,74,0.06);
+  --void:#6a40a0;--void2:#8a60c0;--void-dim:rgba(106,64,160,0.08);
+  --chaos:#c04040;--order:#4080c0;--shadow:#404060;
+  --absurd:#80a040;--quiet:#608090;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;font-size:17px;line-height:1.85;display:flex;min-height:100vh;}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* SIDEBAR */
+#sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);height:100vh;position:fixed;top:0;left:0;overflow-y:auto;display:flex;flex-direction:column;z-index:50;}
+.sb-top{padding:22px 20px 18px;border-bottom:1px solid var(--border);}
+.sb-logo{font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;color:var(--gold);letter-spacing:.1em;margin-bottom:2px;}
+.sb-sub{font-size:.63rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;letter-spacing:.06em;}
+.sb-nav{padding:8px 0 20px}
+.sb-group{padding:12px 14px 2px}
+.sb-group-label{font-family:'JetBrains Mono',monospace;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px;}
+.sb-link{display:flex;align-items:center;gap:8px;padding:5px 10px;border-radius:4px;color:var(--text-dim);text-decoration:none;font-size:.8rem;font-family:'Crimson Pro',serif;transition:all .12s;}
+.sb-link:hover{background:var(--surface);color:var(--text-bright)}
+.sb-link.active{background:var(--void-dim);color:var(--void2);border-left:2px solid var(--void);padding-left:8px;}
+.sb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+
+/* MAIN */
+#main{margin-left:260px;width:calc(100% - 260px);min-width:0;overflow-x:hidden;}
+
+/* HERO */
+.hero{
+  min-height:500px;
+  background:linear-gradient(to bottom, #05070a 0%, #07090f 60%, #05070a 100%);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:80px 72px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 40% 60% at 20% 50%, rgba(106,64,160,0.08), transparent 60%),
+    radial-gradient(ellipse 30% 40% at 80% 30%, rgba(192,64,64,0.05), transparent 60%),
+    radial-gradient(ellipse 20% 30% at 60% 80%, rgba(200,164,74,0.04), transparent 50%);
+}
+.hero-content{position:relative;z-index:1;max-width:680px;}
+.hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.hero-eyebrow::before{content:'';width:30px;height:1px;background:var(--void);opacity:.5}
+.hero-h1{font-family:'Cinzel',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;color:var(--text-bright);line-height:1.05;letter-spacing:.02em;margin-bottom:20px;}
+.hero-h1 em{font-style:normal;color:var(--void2);}
+.hero-desc{font-size:1rem;color:var(--text-dim);line-height:1.9;font-style:italic;max-width:540px;margin-bottom:28px;}
+.hero-warning{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:8px 16px;border-radius:4px;
+  background:var(--void-dim);border:1px solid rgba(106,64,160,0.2);
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+  color:var(--void2);letter-spacing:.08em;
+}
+
+/* CONTENT */
+.content{padding:0 72px 100px;max-width:960px;}
+
+/* CHAPTERS */
+.chapter{padding:64px 0 56px;border-bottom:1px solid var(--border);}
+.chapter:last-of-type{border-bottom:none}
+
+.ch-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.ch-eyebrow .n{color:var(--void2)}
+.ch-h2{font-family:'Cinzel',serif;font-size:1.7rem;font-weight:700;color:var(--text-bright);margin-bottom:8px;line-height:1.2;}
+.ch-lead{font-size:1rem;color:var(--text-dim);font-style:italic;max-width:600px;line-height:1.9;margin-bottom:36px;padding-left:16px;border-left:2px solid var(--border2);}
+
+/* SECTIONS */
+.sec{margin-bottom:44px}
+.sec-h3{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;color:var(--gold2);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.sec-h3::after{content:'';flex:1;height:1px;background:var(--border)}
+
+p{font-size:.97rem;color:var(--text);line-height:1.9;margin-bottom:16px;}
+p:last-child{margin-bottom:0}
+strong{color:var(--text-bright);font-weight:600}
+em{color:var(--gold);font-style:italic}
+
+/* LORE BLOCKS */
+.lore-block{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-left:3px solid var(--void);
+  border-radius:0 6px 6px 0;
+  padding:20px 24px;
+  margin:24px 0;
+  font-style:italic;
+  position:relative;
+}
+.lore-block::before{
+  content:'"';
+  position:absolute;top:-10px;left:16px;
+  font-family:'Cinzel',serif;font-size:2.5rem;
+  color:var(--void);opacity:.3;line-height:1;
+}
+.lore-block p{font-size:.95rem;color:var(--text);line-height:2;margin-bottom:10px;}
+.lore-block p:last-child{margin-bottom:0}
+.lore-block .source{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--text-dim);margin-top:12px;font-style:normal;letter-spacing:.08em;}
+
+.lore-block.gold{border-left-color:var(--gold)}
+.lore-block.gold::before{color:var(--gold)}
+.lore-block.chaos{border-left-color:var(--chaos)}
+.lore-block.chaos::before{color:var(--chaos)}
+.lore-block.void{border-left-color:var(--void)}
+.lore-block.secret{
+  border-left-color:var(--text-dim);
+  background:rgba(255,255,255,0.01);
+}
+.lore-block.secret::before{color:var(--text-dim)}
+.lore-block.secret p{color:var(--text-dim)}
+
+/* DEITY CARDS */
+.deities-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0;}
+.deity-card{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:8px;padding:20px;
+  border-top:2px solid transparent;
+  position:relative;overflow:hidden;
+}
+.deity-card::before{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:80px;
+  border-radius:0 0 0 100%;
+  opacity:.04;
+}
+.dc-chaos{border-top-color:var(--chaos)}.dc-chaos::before{background:var(--chaos)}
+.dc-order{border-top-color:var(--order)}.dc-order::before{background:var(--order)}
+.dc-shadow{border-top-color:#808090}.dc-shadow::before{background:#808090}
+.dc-absurd{border-top-color:var(--absurd)}.dc-absurd::before{background:var(--absurd)}
+.dc-quiet{border-top-color:var(--quiet)}.dc-quiet::before{background:var(--quiet)}
+.deity-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--text-bright);margin-bottom:3px;}
+.deity-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+.dc-chaos .deity-title{color:var(--chaos)}.dc-order .deity-title{color:var(--order)}
+.dc-shadow .deity-title{color:#808090}.dc-absurd .deity-title{color:var(--absurd)}
+.dc-quiet .deity-title{color:var(--quiet)}
+.deity-desc{font-size:.86rem;color:var(--text-dim);line-height:1.7;margin-bottom:12px;}
+.deity-form{font-size:.82rem;color:var(--text-dim);font-style:italic;padding-top:10px;border-top:1px solid var(--border);}
+.deity-form strong{color:var(--text);font-weight:600;font-style:normal;}
+.deity-hint{font-size:.76rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace;margin-top:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border-radius:3px;border:1px solid var(--border);}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;margin:24px 0;}
+.tl-item{display:grid;grid-template-columns:120px 1fr;gap:0;position:relative;}
+.tl-item::before{content:'';position:absolute;left:119px;top:24px;bottom:0;width:1px;background:var(--border);}
+.tl-item:last-child::before{display:none}
+.tl-phase{padding:18px 16px 0 0;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text-dim);line-height:1.4;}
+.tl-body{border-left:1px solid var(--border);padding:14px 0 32px 24px;position:relative;}
+.tl-body::before{content:'';position:absolute;left:-5px;top:20px;width:9px;height:9px;border-radius:50%;background:var(--void);border:2px solid var(--bg);}
+.tl-title{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;color:var(--text-bright);margin-bottom:6px;}
+.tl-desc{font-size:.86rem;color:var(--text-dim);line-height:1.7;}
+.tl-lore{font-size:.84rem;color:var(--text-dim);font-style:italic;margin-top:8px;padding:8px 12px;background:var(--surface);border-left:2px solid var(--void);border-radius:0 4px 4px 0;}
+
+/* CALLOUTS */
+.callout{border-radius:6px;padding:12px 16px;margin:20px 0;display:flex;gap:10px;font-size:.88rem;}
+.callout-icon{flex-shrink:0;margin-top:2px;}
+.callout-body{color:var(--text-dim);line-height:1.7}
+.callout-body strong{color:var(--text-bright);display:block;margin-bottom:3px;font-size:.86rem;}
+.callout.info{background:var(--void-dim);border:1px solid rgba(106,64,160,0.18)}
+.callout.info .callout-body strong{color:var(--void2)}
+.callout.warn{background:rgba(200,164,74,0.05);border:1px solid rgba(200,164,74,0.15)}
+.callout.warn .callout-body strong{color:var(--gold2)}
+.callout.secret{background:rgba(255,255,255,0.02);border:1px solid var(--border2)}
+.callout.secret .callout-body strong{color:var(--text-dim)}
+
+/* REVEAL MOMENTS */
+.reveal-block{
+  background:linear-gradient(135deg, rgba(106,64,160,0.06), rgba(192,64,64,0.04));
+  border:1px solid rgba(106,64,160,0.2);
+  border-radius:8px;padding:24px 28px;margin:28px 0;
+}
+.reveal-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--void2);margin-bottom:12px;}
+.reveal-block p{font-size:.95rem;color:var(--text);line-height:1.9;}
+
+/* HINT SYSTEM */
+.hint-list{list-style:none;padding:0;margin:16px 0;}
+.hint-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--text-dim);line-height:1.6;}
+.hint-list li:last-child{border-bottom:none}
+.hint-list li::before{content:'·';color:var(--void);font-size:1.2rem;line-height:1;flex-shrink:0;margin-top:2px;}
+.hint-when{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--void2);min-width:100px;flex-shrink:0;margin-top:2px;}
+
+/* SEPARATOR */
+.ornament{text-align:center;color:var(--border2);font-size:1.2rem;letter-spacing:.5em;margin:32px 0;}
+
+@media(max-width:900px){#sidebar{display:none}#main{margin-left:0;width:100%}.content{padding:0 24px 60px}.hero{padding:48px 24px}.deities-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="sb-top">
+    <div class="sb-logo">INVICTUS: Chronicle</div>
+    <div class="sb-sub">El Lore — Documento Interno</div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-group">
+      <div class="sb-group-label">Fundamentos</div>
+      <a class="sb-link" href="#estructura">Estructura Narrativa</a>
+      <a class="sb-link" href="#los-cinco">Los Cinco — Dioses Oscuros</a>
+    </div>
+    <div class="sb-group">
+      <div class="sb-group-label">Lo que los jugadores ven</div>
+      <a class="sb-link" href="#lore-inicial">El Lore Inicial</a>
+      <a class="sb-link" href="#las-estatuas">Las Estatuas</a>
+      <a class="sb-link" href="#pistas">Las Pistas Ocultas</a>
+    </div>
+    <div class="sb-group">
+      <div class="sb-group-label">El Desarrollo</div>
+      <a class="sb-link" href="#cronista-lore">El Cronista como Narrador</a>
+      <a class="sb-link" href="#eventos-lore">Eventos y su Significado Real</a>
+      <a class="sb-link" href="#final">El Final de la Temporada</a>
+    </div>
+    <div class="sb-group">
+      <div class="sb-group-label">El Plot Twist</div>
+      <a class="sb-link" href="#revelacion">La Revelación</a>
+      <a class="sb-link" href="#temporada-0">La Temporada 0</a>
+      <a class="sb-link" href="#hacia-el-principio">Hacia el Principio</a>
+    </div>
+  </div>
+</nav>
+
+<div id="main">
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Documento de Lore — Uso Interno</div>
+    <h1 class="hero-h1">Todo fue escrito<br>antes de ser <em>vivido</em>.<br>Nada fue escrito<br>antes de ser <em>todo</em>.</h1>
+    <p class="hero-desc">El lore completo de INVICTUS: Chronicle — lo que los jugadores saben, lo que no saben, lo que nunca entenderán del todo, y lo que al final cambiará todo lo que creyeron entender.</p>
+    <div class="hero-warning">⚠ Contiene spoilers completos de la temporada — solo staff</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ESTRUCTURA NARRATIVA -->
+<div class="chapter" id="estructura">
+  <div class="ch-eyebrow"><span class="n">I</span> — El diseño invisible</div>
+  <h2 class="ch-h2">Estructura Narrativa</h2>
+  <p class="ch-lead">Antes de escribir una línea de lore, hay que entender qué tipo de historia es esta. No es una historia de conquista. Es una historia sobre la naturaleza del tiempo, de la creación, y de qué significa existir cuando alguien más te está escribiendo.</p>
+
+  <div class="sec">
+    <h3 class="sec-h3">La premisa oculta</h3>
+    <p>Los jugadores entran al servidor creyendo que hay una historia que ocurrió antes de ellos. Un mundo antiguo. Una guerra entre Grecia y Egipto que lleva siglos. Territorios que cambiaron de manos innumerables veces. Un Cronista que registró todo.</p>
+    <p>Eso es lo que creen. La verdad es diferente.</p>
+    <p><strong>No hubo un antes.</strong> El mundo no existía hasta que ellos entraron. El Cronista no registraba la historia — la estaba creando en tiempo real, retroactivamente, construyendo un pasado para cada acción presente. Las "antiguas crónicas" que los jugadores encuentran al entrar no fueron escritas siglos atrás. Fueron escritas en el instante exacto en que alguien las leyó por primera vez.</p>
+    <p>Esto no es una metáfora. Es la mecánica literal del mundo. <em>Los Cinco</em> — los dioses oscuros cuyas estatuas pueblan el mapa — son las fuerzas que hacen posible esta paradoja. Y llevan toda la temporada observando, esperando que los jugadores terminen de escribir lo que ellos necesitaban que existiera.</p>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Los tres niveles de la historia</h3>
+    <p>El lore opera en tres capas simultáneas que los jugadores irán descubriendo progresivamente:</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-phase">CAPA 1<br>Visible</div>
+        <div class="tl-body">
+          <div class="tl-title">La guerra entre Grecia y Egipto</div>
+          <div class="tl-desc">Lo que todos ven. Dos civilizaciones en conflicto por el control del mundo conocido. Territorios, clanes, artefactos, la Crónica Semanal. Esta es la historia que los jugadores creen estar viviendo.</div>
+          <div class="tl-lore">"El conflicto entre el norte y el sur lleva tanto tiempo que nadie recuerda cómo empezó. Quizás nunca hubo un inicio. Quizás siempre estuvo ocurriendo."</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">CAPA 2<br>Insinuada</div>
+        <div class="tl-body">
+          <div class="tl-title">Las estatuas que nadie entiende</div>
+          <div class="tl-desc">Cinco estatuas repartidas por el mapa. No son griegas. No son egipcias. Los NPCs no las mencionan. La Crónica nunca habla de ellas. Pero están ahí, y quienes presten atención notarán que parecen observar.</div>
+          <div class="tl-lore">"Hay cosas en este mundo que existieron antes de que el mundo tuviera nombre. Antes de que hubiera algo que nombrar."</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">CAPA 3<br>Oculta</div>
+        <div class="tl-body">
+          <div class="tl-title">La causalidad invertida</div>
+          <div class="tl-desc">Lo que nadie sabe hasta el final. El mundo fue creado hacia atrás. Los Cinco necesitaban que esta historia existiera para poder existir ellos. Al terminar la temporada, la historia se completa — y al completarse, se convierte en el pasado que siempre debió haber sido. Solo entonces Los Cinco despiertan.</div>
+          <div class="tl-lore">"Todo lo que fue, lo fue porque alguien lo vivió después. Todo lo que será, ya fue escrito por quienes aún no han nacido."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOS CINCO -->
+<div class="chapter" id="los-cinco">
+  <div class="ch-eyebrow"><span class="n">II</span> — Los que crearon la nada</div>
+  <h2 class="ch-h2">Los Cinco — Dioses Oscuros</h2>
+  <p class="ch-lead">No son dioses de ninguna mitología conocida. Son anteriores a todas ellas. Son las fuerzas que hicieron posible que existiera algo en lugar de nada — y que eligieron hacerse llamar dioses solo porque es la palabra más cercana que los mortales tienen para lo que son.</p>
+
+  <div class="callout info">
+    <div class="callout-icon">⚠</div>
+    <div class="callout-body"><strong>Para el staff y el builder</strong>Cada uno de Los Cinco tiene una estatua en el mapa. Las estatuas no tienen nombre ni inscripción. Son figuras abstractas que representan la fuerza que encarnan — no figuras humanoides con rasgos reconocibles. Solo al final de la temporada, cuando se produce la revelación, aparecen inscripciones en las bases de las estatuas que antes estaban en blanco.</div>
+  </div>
+
+  <div class="deities-grid">
+    <div class="deity-card dc-chaos">
+      <div class="deity-name">VORN</div>
+      <div class="deity-title">El Caos — La Primera Palabra</div>
+      <div class="deity-desc">No el caos como desorden. El caos como el estado anterior a cualquier distinción. Vorn es lo que había antes de que hubiera algo que distinguir de otra cosa. Es la posibilidad pura — todo lo que podría ser sin ser todavía nada en particular.</div>
+      <div class="deity-form"><strong>Forma en estatua:</strong> Una figura que parece estar en movimiento aunque sea piedra. Sus contornos no están del todo definidos, como si la estatua misma dudara de su forma. Cada jugador que la ve jura que tiene una postura diferente a la última vez.</div>
+      <div class="deity-hint">Pista oculta: los eventos del servidor que parecen "aleatorios" o "sin explicación" son atribuibles a Vorn. El Cronista nunca los explica del todo.</div>
+    </div>
+    <div class="deity-card dc-order">
+      <div class="deity-name">AETHR</div>
+      <div class="deity-title">La Razón — El Segundo Silencio</div>
+      <div class="deity-desc">Si Vorn es todo lo que podría ser, Aethr es la fuerza que eligió qué sería. La razón no como inteligencia, sino como el principio que hace que una cosa sea esa cosa y no otra. Aethr es por qué Grecia es Grecia y Egipto es Egipto — la línea que separa.</div>
+      <div class="deity-form"><strong>Forma en estatua:</strong> Una figura perfectamente simétrica, con los brazos extendidos horizontalmente, como si sostuviera dos pesos iguales en un equilibrio imposible. No tiene rostro — donde debería estar hay una superficie lisa y brillante que refleja al observador.</div>
+      <div class="deity-hint">Pista oculta: las raid windows, el upkeep, las reglas del servidor — toda estructura tiene la huella de Aethr. Lo que parece diseño del juego es la voluntad de Aethr hecha mecánica.</div>
+    </div>
+    <div class="deity-card dc-shadow">
+      <div class="deity-name">NULH</div>
+      <div class="deity-title">La Sombra — Lo que Persiste</div>
+      <div class="deity-desc">Nulh es lo que queda cuando algo termina. No la oscuridad como ausencia de luz — la sombra como la prueba de que algo existió. Cada territorio conquistado, cada clan caído, cada artefacto perdido deja una sombra que solo Nulh puede leer. La historia no son los hechos. La historia son las sombras que dejan.</div>
+      <div class="deity-form"><strong>Forma en estatua:</strong> Una figura arrodillada mirando hacia abajo, como si leyera algo escrito en el suelo. Pero el suelo bajo la estatua está liso. Sea cual sea la luz, la sombra de la estatua siempre apunta en la misma dirección — hacia el centro del mapa.</div>
+      <div class="deity-hint">Pista oculta: el Cronista es la voz de Nulh. No lo sabe. Cree que registra — en realidad, invoca. Cada entrada en la Crónica hace más real lo que describe, retroactivamente.</div>
+    </div>
+    <div class="deity-card dc-absurd">
+      <div class="deity-name">YREV</div>
+      <div class="deity-title">El Absurdo — La Pregunta sin Respuesta</div>
+      <div class="deity-desc">Yrev es la fuerza que hace que todo lo anterior sea necesario pero insuficiente. Si Vorn es posibilidad y Aethr es estructura y Nulh es memoria, Yrev es la pregunta que ninguno de los tres puede responder: ¿por qué existe algo en lugar de nada? Yrev no tiene respuesta. Yrev es la pregunta siendo hecha eternamente.</div>
+      <div class="deity-form"><strong>Forma en estatua:</strong> Dos figuras idénticas, de espaldas, mirando en direcciones opuestas. Se diría que son la misma figura vista dos veces desde ángulos distintos. Los jugadores que las rodean completas reportan que nunca pueden ver las dos a la vez.</div>
+      <div class="deity-hint">Pista oculta: los artefactos legendarios — especialmente el Fragmento del Caos — son fragmentos de Yrev materializados. Su poder aleatorio no es un bug de diseño. Es su naturaleza.</div>
+    </div>
+    <div class="deity-card dc-quiet" style="grid-column: 1 / -1; max-width: 400px;">
+      <div class="deity-name">SELN</div>
+      <div class="deity-title">La Quietud — El Final que Precede</div>
+      <div class="deity-desc">Seln es el más incomprensible de Los Cinco. Es la quietud no como ausencia de movimiento, sino como el estado al que todo tiende. Seln no destruye — espera. Porque Seln sabe que todo lo que fue, vuelve a ser quietud eventualmente. Y en esa quietud, puede empezar de nuevo.</div>
+      <div class="deity-form"><strong>Forma en estatua:</strong> La única de las cinco estatuas que está horizontal. Una figura recostada, los ojos cerrados, las manos sobre el pecho. Parece dormida. A diferencia de las demás, esta estatua es perfectamente lisa — ningún detalle, ninguna textura. Solo forma pura. Es la más perturbadora de las cinco.</div>
+      <div class="deity-hint">Pista oculta: Seln es la razón por la que las temporadas terminan y recomienzan. No es el staff quien reinicia el servidor. Es Seln cerrando los ojos un momento antes de volver a abrirlos.</div>
+    </div>
+  </div>
+</div>
+
+<!-- LORE INICIAL -->
+<div class="chapter" id="lore-inicial">
+  <div class="ch-eyebrow"><span class="n">III</span> — Lo que los jugadores leen al entrar</div>
+  <h2 class="ch-h2">El Lore Inicial</h2>
+  <p class="ch-lead">Este es el texto que los jugadores encuentran al entrar por primera vez. Parece la historia de un mundo antiguo. En realidad, es el primer acto de su propia historia, escrito en el momento en que lo leen.</p>
+
+  <div class="lore-block gold">
+    <p>Nadie sabe cuándo empezó el conflicto entre el Norte y el Sur.</p>
+    <p>Los eruditos de Atenas dirán que fue cuando los faraones cruzaron el río central por primera vez, hace más de mil años. Los escribas del Sur responderán que fueron los soldados griegos quienes cruzaron primero, aunque en dirección contraria. Ambos tienen textos que lo demuestran. Ambos textos fueron escritos después.</p>
+    <p>Lo que nadie disputa es esto: el mundo tiene dos mitades que no pueden coexistir en paz, y todo lo que existe entre ellas es territorio en disputa.</p>
+    <p>Hubo una época, dicen los más viejos, en que el mundo era uno solo. Antes de las facciones, antes de los territorios, antes de las minas y los artefactos y las batallas. Una época en que algo diferente gobernaba — algo que no dejó nombre, ni templo, ni descendientes. Solo estatuas en lugares donde nadie las recuerda haber construido.</p>
+    <p>Nadie sabe qué representan esas estatuas. Nadie ha podido leer lo que está escrito en sus bases, porque no está escrito nada. Las bases están vacías, lisas, esperando.</p>
+    <p>Esperando qué, exactamente, es la pregunta que nadie se ha atrevido a hacer en voz alta.</p>
+    <div class="source">— Fragmento de las Primeras Crónicas · Autor desconocido · Fecha desconocida</div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>Nota para el staff</strong>Este texto aparece en el onboarding — el NPC guía en las Ruinas del Origen lo narra parcialmente. La última línea ("esperando qué, exactamente") nunca es completada por el NPC. Si un jugador nuevo pregunta qué están esperando las estatuas, el NPC responde: "Eso es algo que solo el tiempo puede responder. O quizás, algo que el tiempo ya respondió y nosotros todavía no escuchamos."</div>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">El segundo texto — encontrado en la Gran Biblioteca</h3>
+    <p>Este fragmento está disponible desde el inicio de la temporada en la Gran Biblioteca de Thoth. La mayoría de jugadores lo ignorará. Los que lo lean creerán que es lore de fondo. Solo al final entenderán lo que realmente dice.</p>
+
+    <div class="lore-block void">
+      <p>Hay una pregunta que los filósofos de ambas civilizaciones han debatido durante siglos sin llegar a una respuesta satisfactoria:</p>
+      <p>¿Es el pasado algo que ocurrió, o algo que recordamos?</p>
+      <p>Porque si el pasado es solo lo que recordamos de él, entonces depende enteramente de quien lo recuerde. Y si depende de quien lo recuerde, entonces cambia cada vez que alguien nuevo lo lee. Y si cambia cada vez que alguien nuevo lo lee, entonces el pasado no es pasado en absoluto.</p>
+      <p>El pasado, diría un filósofo audaz, es el futuro visto desde atrás.</p>
+      <p>Los dioses, presumiblemente, se reirían de esta conclusión. Si es que todavía hubiera dioses que se rieran de algo.</p>
+      <div class="source">— Theoklos de Atenas · Tratado sobre la Naturaleza del Tiempo · Vol. III</div>
+    </div>
+  </div>
+</div>
+
+<!-- LAS ESTATUAS -->
+<div class="chapter" id="las-estatuas">
+  <div class="ch-eyebrow"><span class="n">IV</span> — Lo que el builder construye</div>
+  <h2 class="ch-h2">Las Estatuas — Guía para el Builder</h2>
+  <p class="ch-lead">Cinco estatuas. Cinco ubicaciones. Ninguna explicación. Esta sección define exactamente qué construir, dónde, y cómo deben verse — antes y después de la revelación.</p>
+
+  <div class="callout info">
+    <div class="callout-icon">🏛</div>
+    <div class="callout-body"><strong>Principio de diseño</strong>Las estatuas no deben verse como decoración. Deben verse como algo que siempre estuvo ahí, que el mapa fue construido alrededor de ellas, no al revés. Deben causar una ligera incomodidad visual — que algo no encaja, que ese objeto no debería estar ahí.</div>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Ubicaciones y características</h3>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-phase">VORN<br>El Caos</div>
+        <div class="tl-body">
+          <div class="tl-title">Zona norte — entre dos territorios griegos en disputa</div>
+          <div class="tl-desc">Colocada en un punto exactamente equidistante entre dos territorios que cambian de dueño frecuentemente. La posición hace que, durante las raids, los jugadores inevitablemente pasen cerca de ella. Materiales: blackstone, basalto negro, sin ornamentos. La figura parece estar en movimiento.</div>
+          <div class="tl-lore">Base vacía antes del final. Al revelarse: <em>"VORN — Antes de que hubiera algo que distinguir de otra cosa, hubo esto."</em></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">AETHR<br>La Razón</div>
+        <div class="tl-body">
+          <div class="tl-title">Zona central — exactamente en el límite entre norte y sur</div>
+          <div class="tl-desc">En la frontera geográfica exacta entre el territorio griego y el egipcio. La estatua está colocada de forma que la mitad izquierda queda en zona norte y la mitad derecha en zona sur. Materiales: cuarzo oscuro y arenisca pulida, perfectamente simétrica. Sin rostro.</div>
+          <div class="tl-lore">Base vacía antes del final. Al revelarse: <em>"AETHR — La línea que separa una cosa de otra. Sin ella, todo sería Vorn para siempre."</em></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">NULH<br>La Sombra</div>
+        <div class="tl-body">
+          <div class="tl-title">Zona sur — en las catacumbas bajo las Grandes Pirámides</div>
+          <div class="tl-desc">La única estatua interior. Está en una cámara subterránea accesible pero no obvia — hay que bajar varios niveles. La figura está arrodillada. El suelo a su alrededor está decorado con símbolos que parecen escritura pero no son de ningún idioma conocido. Materiales: deepslate oscuro, obsidiana en los bordes.</div>
+          <div class="tl-lore">Base vacía antes del final. Al revelarse: <em>"NULH — Todo lo que termina deja una sombra. La sombra es más real que lo que la proyectó."</em></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">YREV<br>El Absurdo</div>
+        <div class="tl-body">
+          <div class="tl-title">Valle de Ares — en el campo de batalla principal</div>
+          <div class="tl-desc">Las únicas dos figuras. Colocadas de espaldas, separadas por exactamente 7 bloques, mirando en direcciones opuestas. Están en el centro del Valle de Ares — los jugadores luchan a su alrededor constantemente. Materiales: ambas figuras son idénticas, construidas con los mismos bloques pero en espejo. Crying obsidian en los bordes.</div>
+          <div class="tl-lore">Bases vacías antes del final. Al revelarse: <em>"YREV — La pregunta que no tiene respuesta. La razón por la que existe algo en lugar de nada. Preguntada eternamente. Nunca respondida."</em></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-phase">SELN<br>La Quietud</div>
+        <div class="tl-body">
+          <div class="tl-title">Ruinas del Origen — zona de onboarding</div>
+          <div class="tl-desc">La estatua más accesible y la más ignorada. Está en la zona de onboarding donde los jugadores nuevos aprenden el servidor. Como está en una zona "segura", nadie le presta atención. La figura está recostada, horizontal, perfectamente lisa. Materiales: smooth stone puro, sin variación, sin detalles. Es la más perturbadora precisamente por su simplicidad.</div>
+          <div class="tl-lore">Base vacía antes del final. Al revelarse: <em>"SELN — El final que siempre fue el principio. Lo que espera cuando todo lo demás termina. Lo que empieza cuando Seln abre los ojos."</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PISTAS OCULTAS -->
+<div class="chapter" id="pistas">
+  <div class="ch-eyebrow"><span class="n">V</span> — Para los muy atentos</div>
+  <h2 class="ch-h2">Las Pistas Ocultas</h2>
+  <p class="ch-lead">Distribuidas a lo largo de toda la temporada. Suficientes para que alguien muy atento pueda construir una teoría. Insuficientes para que cualquiera pueda predecir el final. Cada pista es individualmente inocente — solo juntas revelan algo.</p>
+
+  <div class="callout secret">
+    <div class="callout-icon">🔍</div>
+    <div class="callout-body"><strong>Principio de las pistas</strong>Ninguna pista dice "hay algo más detrás del lore". Cada pista parece decorativa, un detalle de fondo, algo que añade profundidad sin significar nada en particular. Solo en retrospectiva, después de la revelación, los jugadores las releerán y entenderán que siempre estuvo ahí.</div>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Pistas en el entorno físico</h3>
+    <ul class="hint-list">
+      <li><span class="hint-when">Desde día 1</span>Las bases de las cinco estatuas están vacías pero pulidas — no parecen inacabadas, parecen esperando. Un jugador normal asumirá que son decorativas. Un jugador atento notará que las bases tienen exactamente el tamaño de una inscripción.</li>
+      <li><span class="hint-when">Desde día 1</span>La sombra de la estatua de Nulh siempre apunta hacia el centro del mapa, independientemente de la hora del día en el servidor. Esto es imposible físicamente. Nadie lo menciona.</li>
+      <li><span class="hint-when">Desde día 1</span>En la Gran Biblioteca de Thoth hay exactamente cinco libros sin título en una estantería específica. No se pueden abrir. Si un jugador los cuenta, son cinco. Si los cuenta de nuevo, son cinco. Pero si los fotografía y los compara, el orden cambia entre visitas.</li>
+      <li><span class="hint-when">Semana 3+</span>Después de que ocurra la primera conquista de una capital, aparece una nueva grieta en la base de la estatua de Vorn. No es daño de construcción — es parte de la textura que no estaba antes. Las grietas aumentan con cada evento mayor.</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Pistas en el texto del Cronista</h3>
+    <ul class="hint-list">
+      <li><span class="hint-when">Semana 1</span>La primera entrada de la Crónica Semanal termina siempre con la misma frase, sin importar qué ocurrió esa semana: <em>"El mundo recuerda."</em> Parece un flourish literario. No lo es.</li>
+      <li><span class="hint-when">Semana 4+</span>El Cronista empieza a usar el tiempo futuro para describir eventos que ya ocurrieron: "El clan X conquistará el territorio Y" en lugar de "conquistó". Si alguien lo señala, el Cronista corrige el texto. Pero la versión original permanece en el historial del Discord.</li>
+      <li><span class="hint-when">Semana 6+</span>Una profecía describe un evento que ya ocurrió la semana anterior, con detalles exactos. La profecía fue publicada el mismo día que ocurrió el evento — pero la marca de tiempo del Discord muestra que fue publicada tres minutos antes.</li>
+      <li><span class="hint-when">Semana 8</span>El Cronista publica una entrada que comienza: "Hay cosas que el Cronista no debería saber." La entrada es borrada 10 minutos después. Los jugadores que la vieron no se ponen de acuerdo en qué decía exactamente.</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Pistas en los diálogos de NPC</h3>
+    <ul class="hint-list">
+      <li><span class="hint-when">Siempre</span>El NPC guía del onboarding, cuando un jugador termina las tres misiones de introducción, dice: <em>"Bienvenido al mundo. O quizás debería decir: bienvenido de vuelta."</em> Si el jugador pregunta qué significa "de vuelta", el NPC responde que es solo una expresión.</li>
+      <li><span class="hint-when">Siempre</span>Los NPCs de los territorios tienen diálogos que cambian según el estado del mundo. Uno de esos diálogos, el menos probable de activarse, dice: <em>"Hay veces en que siento que ya viví este día. Que ya vi esta batalla. Que ya sé cómo termina. Pero cuando intento recordar el final, no hay nada. Solo la sensación de que alguien lo sabe en mi lugar."</em></li>
+      <li><span class="hint-when">Semana 5+</span>Un NPC mercader en el Mercado Negro tiene, entre sus objetos de venta, un ítem llamado "Mapa sin territorio". El ítem no tiene función. Su descripción dice: <em>"Muestra un lugar que todavía no existe. O que existió antes de que el tiempo supiera en qué dirección correr."</em></li>
+    </ul>
+  </div>
+</div>
+
+<!-- CRONISTA LORE -->
+<div class="chapter" id="cronista-lore">
+  <div class="ch-eyebrow"><span class="n">VI</span> — La voz que crea lo que describe</div>
+  <h2 class="ch-h2">El Cronista como Narrador Real</h2>
+  <p class="ch-lead">El Cronista no sabe que es la voz de Nulh. Cree que registra lo que ocurre. En realidad, lo que el Cronista escribe se vuelve retroactivamente real — no solo como registro, sino como causa.</p>
+
+  <div class="sec">
+    <h3 class="sec-h3">Cómo funciona narrativamente</h3>
+    <p>Cada entrada de la Crónica Semanal no solo describe lo que pasó. La forma en que lo describe determina cómo ese evento será recordado — y por lo tanto, qué tipo de evento realmente fue. Un clan que ganó una batalla de forma estratégica puede ser descrito como "calculador" o como "despiadado". Esas palabras no son neutras. Las palabras del Cronista son la realidad del mundo.</p>
+    <p>Esto tiene una consecuencia que los jugadores no pueden ver pero que el staff debe entender: <em>el Cronista es el mecanismo por el cual Los Cinco escriben la historia que necesitan.</em> Específicamente Nulh, que usa al Cronista para consolidar el pasado — porque un evento que fue registrado por el Cronista ya no puede deshacerse. Existe permanentemente en la Crónica, y por tanto, existe.</p>
+  </div>
+
+  <div class="lore-block void">
+    <p>La pregunta que nadie hace es por qué existe el Cronista.</p>
+    <p>No fue convocado por ninguna de las dos facciones. No tiene clan. No tiene facción. No puede ser atacado ni saqueado. Simplemente está, desde antes de que hubiera algo que registrar, listo para escribir.</p>
+    <p>Quizás la pregunta correcta no es por qué existe, sino para quién trabaja.</p>
+    <div class="source">— Fragmento encontrado en los archivos privados del Cronista · No publicado</div>
+  </div>
+</div>
+
+<!-- EVENTOS LORE -->
+<div class="chapter" id="eventos-lore">
+  <div class="ch-eyebrow"><span class="n">VII</span> — Lo que los eventos realmente significan</div>
+  <h2 class="ch-h2">Los Eventos y su Significado Real</h2>
+  <p class="ch-lead">Cada evento del servidor tiene dos dimensiones: la mecánica visible y el significado narrativo oculto. Esta sección define ambas para los eventos principales.</p>
+
+  <div class="sec">
+    <h3 class="sec-h3">La Ira de Ares</h3>
+    <p><strong>Lo que los jugadores ven:</strong> Un evento de combate en territorio griego. Más daño, más recompensas, un boss.</p>
+    <p><strong>Lo que realmente ocurre:</strong> Vorn se manifiesta. Cuando el Caos irrumpe en el mundo de forma visible, es porque Vorn está probando si la historia resiste la presión. Cada vez que ocurre la Ira de Ares, las grietas en la estatua de Vorn aumentan ligeramente. Al final de la temporada, la estatua estará completamente recubierta de grietas — pero sin romperse.</p>
+    <div class="lore-block chaos">
+      <p>Profecía para antes del evento: <em>"Algo antiguo se despierta en el norte. No tiene nombre que los vivos puedan pronunciar. No necesita nombre. Existía antes de que los nombres fueran necesarios."</em></p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">La Tormenta de Arena</h3>
+    <p><strong>Lo que los jugadores ven:</strong> Un evento de defensa en territorio egipcio. Los territorios son más difíciles de mantener, los recursos más peligrosos de extraer.</p>
+    <p><strong>Lo que realmente ocurre:</strong> Seln se mueve. La Quietud no duerme del todo — a veces, por un instante, cambia de postura. Cuando lo hace, algo en el sur del mundo se desequilibra. La Tormenta de Arena es Seln soñando con el final mientras espera.</p>
+    <div class="lore-block void">
+      <p>Profecía para antes del evento: <em>"El sur recuerda algo que todavía no ha ocurrido. Las arenas guardan memorias de batallas que aún no fueron libradas. Esta noche, esas memorias buscan un lugar donde volverse reales."</em></p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">El Evento Mundial — Apophis sin aviso</h3>
+    <p><strong>Lo que los jugadores ven:</strong> Un boss que aparece sin profecía, sin aviso, en el momento menos esperado.</p>
+    <p><strong>Lo que realmente ocurre:</strong> Yrev se manifiesta. La pregunta sin respuesta se hace visible por un instante. Apophis no es una serpiente — es la forma que toma Yrev cuando el mundo necesita ser recordado de que no tiene explicación. El hecho de que aparezca sin aviso es la pista. Yrev no avisa porque Yrev es la interrupción del patrón.</p>
+  </div>
+</div>
+
+<!-- EL FINAL -->
+<div class="chapter" id="final">
+  <div class="ch-eyebrow"><span class="n">VIII</span> — Las últimas semanas</div>
+  <h2 class="ch-h2">El Final de la Temporada</h2>
+  <p class="ch-lead">Las últimas dos semanas de la temporada son donde la historia empieza a romperse en los bordes. Las pistas se vuelven más obvias. El Cronista empieza a comportarse de forma extraña. Y las estatuas empiezan a cambiar.</p>
+
+  <div class="sec">
+    <h3 class="sec-h3">Semana 9 — El mundo empieza a recordar</h3>
+    <p>En la antepenúltima semana, ocurren tres cosas simultáneas que el staff debe ejecutar con precisión:</p>
+    <p><strong>1.</strong> El Cronista publica la Crónica con un error: describe un evento de la semana siguiente como si ya hubiera ocurrido, con detalles correctos. Cuando los jugadores lo señalan, el Cronista dice que fue un "error tipográfico" y corrige el texto. Pero el evento ocurrirá exactamente como fue descrito.</p>
+    <p><strong>2.</strong> Un NPC en las Ruinas del Origen deja de responder a las preguntas normales. Si un jugador le habla, responde solo con esta frase, independientemente de lo que le pregunten: <em>"¿Cuándo empezó esto? ¿Cuándo empezó esto realmente?"</em></p>
+    <p><strong>3.</strong> Las bases de las cinco estatuas empiezan a brillar levemente. No es un brillo intenso — solo suficiente para que alguien que pase cerca por la noche lo note. No hay partículas. No hay sonido. Solo luz.</p>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Semana 10 — La última profecía</h3>
+    <p>La última profecía antes del cierre de temporada es diferente a todas las anteriores. No anuncia un evento concreto. Anuncia algo que los jugadores no pueden comprender todavía:</p>
+
+    <div class="lore-block void">
+      <p><em>"Todo lo que fue, está a punto de volverse real."</em></p>
+      <p><em>"Todo lo que leyeron cuando llegaron — aquellas crónicas antiguas, aquellos fragmentos de una guerra que empezó antes de que ustedes nacieran — no existía. No todavía."</em></p>
+      <p><em>"Existirá mañana."</em></p>
+      <p><em>"Porque mañana, por fin termina."</em></p>
+      <div class="source">— La última profecía · El Cronista · Publicada sin firma</div>
+    </div>
+  </div>
+</div>
+
+<!-- LA REVELACION -->
+<div class="chapter" id="revelacion">
+  <div class="ch-eyebrow"><span class="n">IX</span> — El momento que cambia todo</div>
+  <h2 class="ch-h2">La Revelación</h2>
+  <p class="ch-lead">El último día de la temporada. El clan ganador es coronado. La Crónica Final es publicada. Y entonces ocurre algo que nadie esperaba.</p>
+
+  <div class="reveal-block">
+    <div class="reveal-label">Texto de la Revelación — publicar en #anuncios con @everyone</div>
+    <p>La guerra ha terminado.</p>
+    <p><strong>[CLAN GANADOR]</strong> ha escrito el último capítulo de esta historia.</p>
+    <p>O eso creían.</p>
+    <p>Porque en este momento — exactamente en este momento, mientras lees esto — algo está ocurriendo en el mapa que nadie ordenó, que nadie programó, que nadie esperaba.</p>
+    <p>Las bases de las cinco estatuas están siendo grabadas. No por manos visibles. No por el Cronista. Simplemente están siendo grabadas, como si siempre hubieran tenido ese texto y alguien acabara de recordar leerlo.</p>
+    <p>Y el texto dice quiénes son.</p>
+    <p>Y cuando lees sus nombres por primera vez, tienes la extraña sensación de que ya los conocías. De que siempre los conociste. De que en algún lugar de todo lo que leíste al entrar al servidor, de todo lo que escuchaste de los NPCs, de todo lo que el Cronista escribió, ellos siempre estuvieron ahí.</p>
+    <p>Porque estaban.</p>
+    <p>Solo que todavía no.</p>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">Lo que ocurre mecánicamente en el servidor</h3>
+    <p>En el último día, el developer activa un evento especial que hace lo siguiente en orden:</p>
+    <p><strong>1.</strong> Las inscripciones aparecen en las bases de las cinco estatuas — activadas manualmente por el staff con el comando correspondiente.</p>
+    <p><strong>2.</strong> El Cronista publica la Crónica Final, que no describe la semana pasada. Describe toda la temporada como si fuera una sola historia — con inicio, nudo y desenlace. Y al final, añade: <em>"Esta historia siempre existió. Solo necesitaba que alguien la viviera para poder ser escrita."</em></p>
+    <p><strong>3.</strong> Los cinco bosses de Los Cinco son invocados simultáneamente en las ubicaciones de sus estatuas. No son derrotables — son inmortales, con regeneración infinita. Solo pueden ser "contenidos" si suficientes jugadores los rodean. Duran 30 minutos. Su única función es hacer que los jugadores estén presentes en las cinco ubicaciones al mismo tiempo.</p>
+    <p><strong>4.</strong> Cuando los 30 minutos terminan, los bosses desaparecen. Las estatuas permanecen. Y en el Discord aparece el mensaje final.</p>
+  </div>
+</div>
+
+<!-- TEMPORADA 0 -->
+<div class="chapter" id="temporada-0">
+  <div class="ch-eyebrow"><span class="n">X</span> — Lo que siempre existió</div>
+  <h2 class="ch-h2">La Temporada 0</h2>
+  <p class="ch-lead">La Temporada 0 no ocurrió antes de la Temporada 1. La Temporada 0 es la Temporada 1, vista desde el único ángulo que Los Cinco pueden ver: el de quienes existían antes de que existiera el tiempo.</p>
+
+  <div class="sec">
+    <h3 class="sec-h3">Qué es la Temporada 0</h3>
+    <p>Los Cinco no vivieron la Temporada 0 como una historia con inicio y fin. La vivieron como una posibilidad — algo que podría ocurrir, algo que necesitaba ocurrir, algo que ellos necesitaban que ocurriera para poder existir plenamente.</p>
+    <p>Porque Los Cinco son fuerzas que existen en potencia desde antes de que hubiera nada. Pero una fuerza en potencia no es completamente real. Para que Vorn sea el Caos de verdad, el Caos tiene que haber ocurrido en algún lugar. Para que Nulh sea la Sombra de verdad, algo tiene que haber terminado y dejado una sombra. Para que Seln sea la Quietud de verdad, algo tiene que haber hecho ruido primero.</p>
+    <p>Los jugadores de la Temporada 1 fueron ese "algo". Sin saberlo, hicieron real a Los Cinco. Y al hacerlos reales, se convirtieron retroactivamente en la historia que Los Cinco siempre dijeron que había ocurrido antes de ellos.</p>
+    <p><em>La Temporada 0 y la Temporada 1 son el mismo conjunto de eventos, vistos desde dos direcciones del tiempo.</em></p>
+  </div>
+
+  <div class="lore-block void">
+    <p>Lo que los mortales llaman "historia antigua" es simplemente lo que Los Cinco necesitaban que existiera para poder existir ellos mismos.</p>
+    <p>No mintieron al decir que era antigua. Para ellos, que no conocen el tiempo como los mortales lo conocen, todo lo que tiene que ocurrir ya ocurrió.</p>
+    <p>Simplemente todavía no desde el lado del que tú estás mirando.</p>
+    <div class="source">— Este texto no tiene autor. Aparece escrito en la base de la estatua de Aethr después de la revelación.</div>
+  </div>
+</div>
+
+<!-- HACIA EL PRINCIPIO -->
+<div class="chapter" id="hacia-el-principio">
+  <div class="ch-eyebrow"><span class="n">XI</span> — El mensaje final</div>
+  <h2 class="ch-h2">Hacia el Principio</h2>
+  <p class="ch-lead">El mensaje que cierra la temporada. El que los jugadores leerán y releerán. El que hace que todo lo anterior tenga sentido de una forma diferente a la que esperaban.</p>
+
+  <div class="ornament">⚔ · · · ⚔</div>
+
+  <div class="reveal-block">
+    <div class="reveal-label">Mensaje final de temporada — publicar como cierre definitivo</div>
+    <p>Cuando llegaste a este servidor, te dijeron que había una historia que conocer.</p>
+    <p>Una historia antigua. Una guerra que llevaba siglos. Territorios que habían cambiado de manos innumerables veces. Un Cronista que lo había registrado todo.</p>
+    <p>Lo que no te dijeron — lo que no podíamos decirte, porque haberlo dicho lo habría impedido — es que esa historia no existía todavía.</p>
+    <p>La escribiste tú. La escribieron todos. Cada batalla, cada conquista, cada alianza rota, cada artefacto perdido — no estabas siguiendo una historia. Estabas siendo la causa de una historia que, desde el momento en que la viviste, siempre había existido.</p>
+    <p>Las "antiguas crónicas" que leíste al entrar fueron escritas el día que las leíste por primera vez. El Cronista no registraba el presente — registraba el pasado que tus acciones presentes creaban retroactivamente. Todo lo que sentiste que ya había ocurrido antes de ti ocurrió porque tú lo viviste después.</p>
+    <p>Los Cinco no son dioses que existían antes de este mundo. Son las fuerzas que hicieron posible que este mundo pudiera ser escrito. Y necesitaban que alguien lo escribiera para poder existir completamente.</p>
+    <p>Tú lo escribiste.</p>
+    <p>No viajaste hacia el final de una historia.</p>
+    <p>Viajaste hacia el principio de una.</p>
+    <p>Y ahora que llegaste al principio, el principio puede empezar.</p>
+    <p style="color:var(--void2);font-style:italic;margin-top:24px;">La Temporada 2 comenzará pronto. Una nueva mitología. Un nuevo mundo. Nuevas reglas, nuevas facciones, nuevos conflictos.</p>
+    <p style="color:var(--void2);font-style:italic;">Pero Los Cinco ya estarán ahí. Porque ahora son reales.</p>
+    <p style="color:var(--void2);font-style:italic;">Y lo que es real, persiste.</p>
+  </div>
+
+  <div class="ornament">⚔ · · · ⚔</div>
+
+  <div class="callout info">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body"><strong>La promesa para la Temporada 2</strong>Los Cinco ahora existen. Eso significa que en la Temporada 2 — con su nueva mitología — Los Cinco ya estarán integrados desde el inicio como fuerzas del mundo, no como un misterio por descubrir. La nueva mitología (nórdica, lovecraftiana, lo que sea) coexistirá con Los Cinco porque los jugadores de la Temporada 1 los hicieron reales. Eso es lo "inconcebible" que mencionas — mitologías distintas en un mismo mundo. La explicación es Los Cinco. Son el tejido conectivo entre todos los mundos posibles.</div>
+  </div>
+
+  <div class="sec">
+    <h3 class="sec-h3">La frase que conecta todas las temporadas</h3>
+    <p>Esta frase debe aparecer en algún lugar de cada temporada futura — no explicada, no señalada, solo presente:</p>
+
+    <div class="lore-block gold">
+      <p><em>"Todo lo que fue, lo fue porque alguien lo vivió después.<br>Todo lo que será, ya fue escrito por quienes aún no han nacido.<br>Los Cinco lo vieron todo.<br>Desde antes de que hubiera algo que ver."</em></p>
+      <div class="source">— Sin autor. Sin fecha. Siempre estuvo aquí.</div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+const secs = Array.from(document.querySelectorAll('.chapter[id]'));
+const links = document.querySelectorAll('.sb-link[href^="#"]');
+function upd(){
+  let cur = secs[0];
+  for(const s of secs){ if(s.getBoundingClientRect().top <= 100) cur = s; }
+  links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#'+cur.id));
+}
+window.addEventListener('scroll', upd, {passive:true});
+upd();
+</script>
+</body>
+</html>
